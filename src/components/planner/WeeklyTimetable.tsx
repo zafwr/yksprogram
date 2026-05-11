@@ -245,7 +245,7 @@ export function WeeklyTimetable() {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Ders</Label>
-              <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+              <Select value={selectedSubject} onValueChange={(val) => setSelectedSubject(val)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Ders seçin" />
                 </SelectTrigger>
@@ -260,7 +260,7 @@ export function WeeklyTimetable() {
             {selectedSubject && (
               <div className="space-y-2">
                 <Label>Konu</Label>
-                <Select value={selectedTopic} onValueChange={setSelectedTopic}>
+                <Select value={selectedTopic} onValueChange={(val) => setSelectedTopic(val)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Konu seçin" />
                   </SelectTrigger>

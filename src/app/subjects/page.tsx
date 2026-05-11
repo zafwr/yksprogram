@@ -136,7 +136,7 @@ export default function SubjectsPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="category">Kategori</Label>
-                <Select value={newCategory} onValueChange={setNewCategory}>
+                <Select value={newCategory} onValueChange={(val) => setNewCategory(val)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Kategori seçin" />
                   </SelectTrigger>

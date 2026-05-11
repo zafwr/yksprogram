@@ -128,7 +128,7 @@ export default function ExamsPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-2">
                   <Label>Tür</Label>
-                  <Select value={type} onValueChange={setType}>
+                  <Select value={type} onValueChange={(val) => setType(val)}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="TYT">TYT</SelectItem>
