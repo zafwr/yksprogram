@@ -45,8 +45,9 @@ export function WeeklySummary() {
           let topSub = "—";
           let maxCount = 0;
           for (const [name, count] of Object.entries(stats.subjects)) {
-            if (count > maxCount) {
-              maxCount = count;
+            const numericCount = count as number;
+            if (numericCount > maxCount) {
+              maxCount = numericCount;
               topSub = name;
             }
           }
