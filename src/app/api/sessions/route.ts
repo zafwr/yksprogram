@@ -10,11 +10,18 @@ export async function GET(req: Request) {
 
   try {
     const { searchParams } = new URL(req.url);
+    const startDateStr = searchParams.get("start");
+    const endDateStr = searchParams.get("end");
     const dateStr = searchParams.get("date");
     
     let whereClause: any = { userId: sessionUser.user.id };
 
-    if (dateStr) {
+    if (startDateStr && endDateStr) {
+      whereClause.startTime = {
+        gte: new Date(startDateStr),
+        lte: new Date(endDateStr),
+      };
+    } else if (dateStr) {
       const date = new Date(dateStr);
       const nextDay = new Date(date);
       nextDay.setDate(date.getDate() + 1);
