@@ -1,11 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { WeeklyTimetable } from "@/components/planner/WeeklyTimetable";
-import { ExamCountdown } from "@/components/planner/ExamCountdown";
+import { PomodoroTimer } from "@/components/planner/PomodoroTimer";
 
 export default function Dashboard() {
   return (
     <div className="space-y-6">
-      <ExamCountdown />
+      <PomodoroTimer />
       <div className="grid gap-4 md:grid-cols-1">
         <Card className="card-floral">
           <CardHeader>
