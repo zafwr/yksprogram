@@ -4,6 +4,7 @@ import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
+import { FlowerConfetti } from "@/components/flower-confetti";
 
 import { useSession } from "next-auth/react";
 
@@ -18,6 +19,7 @@ export function Navbar() {
         <h1 className="text-xl font-semibold">Hoşgeldin, {userName.split(" ")[0]} 👋</h1>
       </div>
       <div className="flex items-center gap-4">
+        <FlowerConfetti />
         <ModeToggle />
         <Button variant="ghost" size="icon" className="relative text-muted-foreground">
           <Bell className="h-5 w-5" />
