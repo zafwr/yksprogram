@@ -5,35 +5,35 @@ import { Button } from '@/components/ui/button';
 
 export function FlowerConfetti() {
   const handleConfetti = () => {
-    const scalar = 3;
+    const scalar = 5; // Very visible size
     const rose = confetti.shapeFromText({ text: '🌹', scalar });
     const flower = confetti.shapeFromText({ text: '🌸', scalar });
     const tulip = confetti.shapeFromText({ text: '🌷', scalar });
 
-    const defaults = {
-      spread: 360,
-      ticks: 100,
-      gravity: 0.5,
-      decay: 0.94,
-      startVelocity: 30,
-      shapes: [rose, flower, tulip],
-      scalar
-    };
+    const duration = 5 * 1000;
+    const animationEnd = Date.now() + duration;
 
-    function shoot() {
+    (function frame() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) return;
+
+      const particleCount = 1;
+      
       confetti({
-        ...defaults,
-        particleCount: 40,
-        origin: { x: Math.random(), y: Math.random() - 0.2 }
+        particleCount,
+        angle: 90,
+        spread: 360,
+        origin: { x: Math.random(), y: -0.2 }, // Falling from way above
+        shapes: [rose, flower, tulip],
+        scalar,
+        gravity: 0.7,
+        drift: Math.random() * 2 - 1,
+        ticks: 200
       });
-    }
 
-    // Shoot multiple times for a richer effect
-    setTimeout(shoot, 0);
-    setTimeout(shoot, 200);
-    setTimeout(shoot, 400);
-    setTimeout(shoot, 600);
-    setTimeout(shoot, 800);
+      requestAnimationFrame(frame);
+    }());
   };
 
   return (
