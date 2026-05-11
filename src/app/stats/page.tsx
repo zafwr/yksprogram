@@ -12,7 +12,7 @@ import { tr } from "date-fns/locale";
 import { Search } from "lucide-react";
 import {
   Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis,
-  CartesianGrid, PieChart, Pie, Legend, Line, LineChart,
+  CartesianGrid, PieChart, Pie, Legend, Line, LineChart, Area, AreaChart
 } from "recharts";
 
 const COLORS = [
@@ -277,28 +277,126 @@ function ExamStats() {
     Net: Number(e.netScore.toFixed(2)),
   }));
 
+  const subjects = [
+    { key: "turkce", label: "Türkçe", color: "#f43f5e" },
+    { key: "matematik", label: "Matematik", color: "#3b82f6" },
+    { key: "fizik", label: "Fizik", color: "#10b981" },
+    { key: "kimya", label: "Kimya", color: "#f59e0b" },
+    { key: "biyoloji", label: "Biyoloji", color: "#8b5cf6" },
+    { key: "tarih", label: "Tarih", color: "#64748b" },
+    { key: "cografya", label: "Coğrafya", color: "#0ea5e9" },
+    { key: "felsefe", label: "Felsefe", color: "#d946ef" },
+    { key: "din", label: "Din Kültürü", color: "#84cc16" },
+  ];
+
+  const getSubjectNetData = (subjectKey: string) => {
+    return tytExams.map(e => {
+      const correct = e[`${subjectKey}Correct`] || 0;
+      const wrong = e[`${subjectKey}Wrong`] || 0;
+      const net = correct - (wrong * 0.25);
+      return {
+        name: format(new Date(e.date), "dd MMM", { locale: tr }),
+        net: Number(net.toFixed(2)),
+      };
+    });
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
-        <Card><CardContent className="pt-5 pb-4"><p className="text-xs text-muted-foreground uppercase">Deneme</p><p className="text-3xl font-bold">{tytExams.length}</p></CardContent></Card>
-        <Card><CardContent className="pt-5 pb-4"><p className="text-xs text-muted-foreground uppercase">Ortalama Net</p><p className="text-3xl font-bold text-indigo-500">{avgNet.toFixed(2)}</p></CardContent></Card>
-        <Card><CardContent className="pt-5 pb-4"><p className="text-xs text-muted-foreground uppercase">En İyi Net</p><p className="text-3xl font-bold text-green-500">{bestExam?.netScore.toFixed(2) || "0"}</p></CardContent></Card>
+    <div className="space-y-6 pb-10">
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-3">
+        <Card className="bg-gradient-to-br from-indigo-500/10 to-transparent border-indigo-500/20">
+          <CardContent className="pt-6 pb-4 text-center">
+            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">Toplam Deneme</p>
+            <p className="text-4xl font-bold">{tytExams.length}</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-br from-blue-500/10 to-transparent border-blue-500/20">
+          <CardContent className="pt-6 pb-4 text-center">
+            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">Ortalama Net</p>
+            <p className="text-4xl font-bold text-blue-500">{avgNet.toFixed(2)}</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-br from-emerald-500/10 to-transparent border-emerald-500/20">
+          <CardContent className="pt-6 pb-4 text-center">
+            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">En İyi Net</p>
+            <p className="text-4xl font-bold text-emerald-500">{bestExam?.netScore.toFixed(2) || "0"}</p>
+          </CardContent>
+        </Card>
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>Net Gelişimi</CardTitle></CardHeader>
-        <CardContent className="h-[300px]">
+      <Card className="border-none bg-muted/20 shadow-none overflow-hidden">
+        <CardHeader className="bg-muted/40 border-b border-white/5">
+          <CardTitle className="text-lg">Genel Net Gelişimi</CardTitle>
+        </CardHeader>
+        <CardContent className="h-[300px] pt-6">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={lineData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-              <XAxis dataKey="name" fontSize={12} tick={{ fill: "#94a3b8" }} />
-              <YAxis fontSize={12} tick={{ fill: "#94a3b8" }} />
+            <AreaChart data={lineData}>
+              <defs>
+                <linearGradient id="colorNet" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
+              <XAxis dataKey="name" fontSize={11} tick={{ fill: "#64748b" }} axisLine={false} tickLine={false} />
+              <YAxis fontSize={11} tick={{ fill: "#64748b" }} axisLine={false} tickLine={false} />
               <Tooltip content={<DarkTooltip />} />
-              <Line type="monotone" dataKey="Net" stroke="#6366f1" strokeWidth={3} dot={{ r: 4 }} />
-            </LineChart>
+              <Area 
+                type="monotone" 
+                dataKey="Net" 
+                stroke="#6366f1" 
+                strokeWidth={3} 
+                fillOpacity={1} 
+                fill="url(#colorNet)" 
+                dot={{ r: 4, fill: "#6366f1", strokeWidth: 2, stroke: "#fff" }} 
+              />
+            </AreaChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
+
+      <div className="pt-4">
+        <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+          <div className="w-1.5 h-6 bg-primary rounded-full"></div>
+          Ders Bazlı Net Analizi
+        </h3>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {subjects.map((s) => {
+            const data = getSubjectNetData(s.key);
+            const subAvg = data.length > 0 ? data.reduce((a, b) => a + b.net, 0) / data.length : 0;
+            
+            return (
+              <Card key={s.key} className="overflow-hidden border-none bg-muted/10 shadow-none hover:bg-muted/20 transition-colors">
+                <CardHeader className="py-4 px-5 flex flex-row items-center justify-between space-y-0">
+                  <div>
+                    <CardTitle className="text-sm font-bold">{s.label}</CardTitle>
+                    <p className="text-[10px] text-muted-foreground uppercase mt-0.5">Ortalama: {subAvg.toFixed(2)}</p>
+                  </div>
+                  <div className="text-lg font-bold" style={{ color: s.color }}>
+                    {data[data.length - 1]?.net || 0}
+                  </div>
+                </CardHeader>
+                <CardContent className="h-[120px] p-0 px-1 pb-2">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={data}>
+                      <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                      <Tooltip content={<DarkTooltip />} />
+                      <Line 
+                        type="monotone" 
+                        dataKey="net" 
+                        stroke={s.color} 
+                        strokeWidth={2.5} 
+                        dot={{ r: 3, fill: s.color }} 
+                        activeDot={{ r: 5, strokeWidth: 0 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
