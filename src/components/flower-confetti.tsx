@@ -5,37 +5,35 @@ import { Button } from '@/components/ui/button';
 
 export function FlowerConfetti() {
   const handleConfetti = () => {
-    const duration = 3 * 1000;
-    const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+    const scalar = 3;
+    const rose = confetti.shapeFromText({ text: '🌹', scalar });
+    const flower = confetti.shapeFromText({ text: '🌸', scalar });
+    const tulip = confetti.shapeFromText({ text: '🌷', scalar });
 
-    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+    const defaults = {
+      spread: 360,
+      ticks: 100,
+      gravity: 0.5,
+      decay: 0.94,
+      startVelocity: 30,
+      shapes: [rose, flower, tulip],
+      scalar
+    };
 
-    const interval: any = setInterval(function() {
-      const timeLeft = animationEnd - Date.now();
-
-      if (timeLeft <= 0) {
-        return clearInterval(interval);
-      }
-
-      const particleCount = 50 * (timeLeft / duration);
-      
-      // Flower shapes or colors
+    function shoot() {
       confetti({
         ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-        colors: ['#ff69b4', '#ff1493', '#ffc0cb', '#da70d6'],
-        shapes: ['circle'], // We can simulate flowers with circles and colors
+        particleCount: 40,
+        origin: { x: Math.random(), y: Math.random() - 0.2 }
       });
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-        colors: ['#ff69b4', '#ff1493', '#ffc0cb', '#da70d6'],
-        shapes: ['circle'],
-      });
-    }, 250);
+    }
+
+    // Shoot multiple times for a richer effect
+    setTimeout(shoot, 0);
+    setTimeout(shoot, 200);
+    setTimeout(shoot, 400);
+    setTimeout(shoot, 600);
+    setTimeout(shoot, 800);
   };
 
   return (
@@ -43,10 +41,10 @@ export function FlowerConfetti() {
       variant="ghost"
       size="icon"
       onClick={handleConfetti}
-      className="text-pink-500 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-950 text-xl"
-      title="Kutlama yap! 🌸"
+      className="text-pink-500 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-950 text-2xl"
+      title="Kutlama yap! 🌹"
     >
-      🌸
+      🌹
     </Button>
   );
 }

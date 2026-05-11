@@ -16,7 +16,12 @@ export function Navbar() {
   return (
     <div className="border-b bg-background h-16 flex items-center px-6 shrink-0 justify-between">
       <div className="flex-1">
-        <h1 className="text-xl font-semibold">Hoşgeldin, {userName.split(" ")[0]} 👋</h1>
+        <h1 className="text-xl font-semibold flex items-center gap-2">
+          Hoşgeldin, {userName.split(" ")[0]} 👋 
+          <span className="text-sm font-medium text-pink-500 hidden md:inline-block ml-2 opacity-80 italic">
+            Seninle çok gurur duyuyorum 🌸
+          </span>
+        </h1>
       </div>
       <div className="flex items-center gap-4">
         <FlowerConfetti />
