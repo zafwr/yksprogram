@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String?
+  email         String         @unique
+  password      String?        // Şifre alanı eklendi
+  
+  subjects      Subject[]
+  sessions      StudySession[]
+  mockExams     MockExam[]     // Denemeler kullanıcıya bağlandı
+  
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Subject {
+  id            String         @id @default(uuid())
+  name          String         // Örn: Fizik, Matematik
+  category      String         // Örn: TYT, AYT
+  
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  topics        Topic[]
+  sessions      StudySession[]
+  
+  createdAt     DateTime       @default(now())
+}
+
+model Topic {
+  id            String         @id @default(uuid())
+  name          String         // Örn: Elektrik, Türev
+  subjectId     String
+  subject       Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  sessions      StudySession[]
+  createdAt     DateTime       @default(now())
+}
+
+model StudySession {
+  id            String         @id @default(uuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subjectId     String
+  subject       Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  topicId       String
+  topic         Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  
+  startTime     DateTime
+  endTime       DateTime
+  targetQuestions Int?
+  notes         String?
+  
+  result        StudyResult?
+  status        String         @default("PLANNED") // PLANNED, COMPLETED, CANCELLED
+  
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model StudyResult {
+  id            String         @id @default(uuid())
+  sessionId     String         @unique
+  session       StudySession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  solvedCount   Int            @default(0)
+  correctCount  Int            @default(0)
+  wrongCount    Int            @default(0)
+  emptyCount    Int            @default(0)
+  netScore      Float          @default(0.0) // (Doğru - Yanlış/4)
+  
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model MockExam {
+  id            String         @id @default(uuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title         String         // Örn: Özdebir TYT 3
+  type          String         // TYT, AYT, YDT, etc.
+  date          DateTime
+  
+  // Genel (toplamlar)
+  correctCount  Int            @default(0)
+  wrongCount    Int            @default(0)
+  emptyCount    Int            @default(0)
+  netScore      Float          @default(0.0)
+  
+  // TYT Ders bazlı doğrular
+  turkceCorrect   Int?
+  turkceWrong     Int?
+  turkceEmpty     Int?
+  
+  tarihCorrect    Int?
+  tarihWrong      Int?
+  tarihEmpty      Int?
+  
+  cografyaCorrect Int?
+  cografyaWrong   Int?
+  cografyaEmpty   Int?
+  
+  dinCorrect      Int?
+  dinWrong        Int?
+  dinEmpty        Int?
+  
+  felsefeCorrect  Int?
+  felsefeWrong    Int?
+  felsefeEmpty    Int?
+  
+  matematikCorrect Int?
+  matematikWrong   Int?
+  matematikEmpty   Int?
+  
+  fizikCorrect    Int?
+  fizikWrong      Int?
+  fizikEmpty      Int?
+  
+  kimyaCorrect    Int?
+  kimyaWrong      Int?
+  kimyaEmpty      Int?
+  
+  biyolojiCorrect Int?
+  biyolojiWrong   Int?
+  biyolojiEmpty   Int?
+  
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
