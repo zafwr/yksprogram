@@ -155,6 +155,25 @@ export function WeeklyTimetable() {
       toast.error("Bir hata oluştu.");
     }
   };
+  const handleDeleteSession = async (id: string) => {
+    if (!confirm("Bu çalışmayı silmek istediğinizden emin misiniz?")) return;
+    
+    try {
+      const res = await fetch(`/api/sessions/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        toast.success("Çalışma silindi!");
+        setIsResultModalOpen(false);
+        fetchData();
+      } else {
+        toast.error("Silme işlemi başarısız.");
+      }
+    } catch (error) {
+      toast.error("Bir hata oluştu.");
+    }
+  };
 
   // Find session for a cell
   const getSessionForCell = (dayIndex: number, timeIndex: number) => {
@@ -335,7 +354,9 @@ export function WeeklyTimetable() {
                 </div>
               </div>
 
-              <Button onClick={handleSaveResult} className="w-full mt-4">Kaydet</Button>
+              <div className="flex justify-between items-center pt-4 border-t">
+              <Button variant="destructive" onClick={() => handleDeleteSession(selectedSession.id)}>Sil</Button>
+              <Button onClick={handleSaveResult}>Kaydet</Button>
             </div>
           )}
         </DialogContent>

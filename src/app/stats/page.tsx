@@ -378,7 +378,7 @@ function ExamStats() {
                 </CardHeader>
                 <CardContent className="h-[120px] p-0 px-1 pb-2">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={data}>
+                    <LineChart data={data} margin={{ top: 15, right: 10, left: 10, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.04)" vertical={false} />
                       <Tooltip content={<DarkTooltip />} />
                       <Line 
@@ -388,6 +388,7 @@ function ExamStats() {
                         strokeWidth={2.5} 
                         dot={{ r: 3, fill: s.color }} 
                         activeDot={{ r: 5, strokeWidth: 0 }}
+                        label={{ position: 'top', fill: s.color, fontSize: 10, fontWeight: 'bold' }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
