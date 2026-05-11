@@ -189,7 +189,7 @@ function TopicAnalysis({ stats }: { stats: TopicStat[] }) {
         </div>
         <div className="space-y-1.5 w-[200px]">
           <label className="text-sm font-medium">Ders Filtrele</label>
-          <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+          <Select value={selectedSubject} onValueChange={(val) => setSelectedSubject(val || "")}>
             <SelectTrigger>
               <SelectValue placeholder="Ders Seçin" />
             </SelectTrigger>
