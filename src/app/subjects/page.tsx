@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -52,6 +52,34 @@ export default function SubjectsPage() {
   useEffect(() => {
     fetchSubjects();
   }, []);
+
+  const handleDeleteSubject = async (id: string) => {
+    if (!confirm("Bu dersi silmek istediğine emin misin? Tüm konuları ve kayıtlı oturumları da silinecektir.")) return;
+
+    try {
+      const res = await fetch(`/api/subjects/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        toast.success("Ders silindi.");
+        fetchSubjects();
+      }
+    } catch (error) {
+      toast.error("Ders silinirken bir hata oluştu.");
+    }
+  };
+
+  const handleDeleteTopic = async (id: string) => {
+    if (!confirm("Bu konuyu silmek istediğine emin misin?")) return;
+
+    try {
+      const res = await fetch(`/api/topics/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        toast.success("Konu silindi.");
+        fetchSubjects();
+      }
+    } catch (error) {
+      toast.error("Konu silinirken bir hata oluştu.");
+    }
+  };
 
   const handleAddSubject = async () => {
     if (!newSubject) {
@@ -158,11 +186,21 @@ export default function SubjectsPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {subjects.map((subject) => (
-            <Card key={subject.id}>
+            <Card key={subject.id} className="card-floral group border-pink-100/50 dark:border-pink-900/30">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-xl font-bold">{subject.name}</CardTitle>
-                <div className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium">
-                  {subject.category}
+                <div className="flex items-center gap-2">
+                  <div className="px-2 py-1 bg-pink-100 dark:bg-pink-900/40 text-pink-600 dark:text-pink-400 text-xs rounded-full font-medium">
+                    {subject.category}
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => handleDeleteSubject(subject.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent>
@@ -171,7 +209,7 @@ export default function SubjectsPage() {
                 </p>
                 <Button 
                   variant="outline" 
-                  className="w-full" 
+                  className="w-full border-pink-200 dark:border-pink-800 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-950/30" 
                   size="sm"
                   onClick={() => handleOpenTopicModal(subject)}
                 >
@@ -195,13 +233,21 @@ export default function SubjectsPage() {
             <DialogTitle>{selectedSubject?.name} Konuları</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="max-h-[200px] overflow-y-auto space-y-2 border rounded-md p-2 bg-muted/20">
+            <div className="max-h-[300px] overflow-y-auto space-y-2 border border-pink-100 dark:border-pink-900 rounded-md p-2 bg-pink-50/50 dark:bg-pink-950/20">
               {selectedSubject?.topics?.length === 0 ? (
                 <div className="text-sm text-muted-foreground text-center py-4">Henüz konu eklenmemiş.</div>
               ) : (
                 selectedSubject?.topics?.map((topic: any) => (
-                  <div key={topic.id} className="text-sm p-2 border-b last:border-0 hover:bg-muted/50 rounded transition-colors">
-                    {topic.name}
+                  <div key={topic.id} className="flex items-center justify-between text-sm p-3 bg-white dark:bg-slate-900 border border-pink-100/50 dark:border-pink-800/50 rounded shadow-sm hover:border-pink-200 transition-all">
+                    <span className="font-medium text-slate-700 dark:text-slate-300">{topic.name}</span>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 text-rose-400 hover:text-rose-600"
+                      onClick={() => handleDeleteTopic(topic.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 ))
               )}
