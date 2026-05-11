@@ -355,8 +355,9 @@ export function WeeklyTimetable() {
               </div>
 
               <div className="flex justify-between items-center pt-4 border-t">
-              <Button variant="destructive" onClick={() => handleDeleteSession(selectedSession.id)}>Sil</Button>
-              <Button onClick={handleSaveResult}>Kaydet</Button>
+                <Button variant="destructive" onClick={() => handleDeleteSession(selectedSession.id)}>Sil</Button>
+                <Button onClick={handleSaveResult}>Kaydet</Button>
+              </div>
             </div>
           )}
         </DialogContent>
