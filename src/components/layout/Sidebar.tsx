@@ -20,9 +20,9 @@ export function Sidebar() {
   return (
     <div className="flex h-full w-64 flex-col border-r bg-muted/30">
       <div className="p-6">
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
-          <GraduationCap className="h-6 w-6 text-primary" />
-          <span>YKS Program</span>
+        <Link href="/" className="flex items-center gap-2 font-bold text-2xl tracking-tight text-pink-600">
+          <span className="text-3xl">🌸</span>
+          <span>Nimiyks</span>
         </Link>
       </div>
       <div className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
