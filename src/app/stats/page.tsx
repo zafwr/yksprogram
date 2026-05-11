@@ -95,18 +95,21 @@ function StudyStats({ stats }: { stats: TopicStat[] }) {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-5">
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-5">
         {[
-          { label: "Toplam Soru",  value: totalSolved,           color: "#e2e8f0" },
-          { label: "Doğru",        value: totalCorrect,          color: "#22c55e" },
-          { label: "Yanlış",       value: totalWrong,            color: "#ef4444" },
-          { label: "Boş",          value: totalEmpty,            color: "#f59e0b" },
-          { label: "Başarı Oranı", value: `%${averageRate}`,     color: "#818cf8" },
+          { label: "Toplam Soru",  value: totalSolved,           color: "text-slate-600", bg: "bg-slate-100", icon: "📚" },
+          { label: "Doğru",        value: totalCorrect,          color: "text-emerald-600", bg: "bg-emerald-100", icon: "✅" },
+          { label: "Yanlış",       value: totalWrong,            color: "text-rose-600", bg: "bg-rose-100", icon: "❌" },
+          { label: "Boş",          value: totalEmpty,            color: "text-amber-600", bg: "bg-amber-100", icon: "⚪" },
+          { label: "Başarı Oranı", value: `%${averageRate}`,     color: "text-pink-600", bg: "bg-pink-100", icon: "⭐" },
         ].map(c => (
-          <Card key={c.label}>
-            <CardContent className="pt-5 pb-4">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">{c.label}</p>
-              <p className="text-3xl font-bold mt-1" style={{ color: c.color }}>{c.value}</p>
+          <Card key={c.label} className="border-none shadow-sm overflow-hidden card-floral">
+            <CardContent className="p-0">
+              <div className={cn("px-4 py-6 flex flex-col items-center justify-center text-center", c.bg)}>
+                <span className="text-2xl mb-2">{c.icon}</span>
+                <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">{c.label}</p>
+                <p className={cn("text-3xl font-black mt-1", c.color)}>{c.value}</p>
+              </div>
             </CardContent>
           </Card>
         ))}
@@ -206,27 +209,57 @@ function TopicAnalysis({ stats }: { stats: TopicStat[] }) {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredStats.map((s, i) => (
           <Card key={s.topicId} className={cn(
-            "border-l-4 transition-all hover:shadow-md",
-            s.successRate < 50 ? "border-l-destructive" : s.successRate < 80 ? "border-l-warning" : "border-l-success"
+            "border-none shadow-sm card-floral group transition-all hover:scale-[1.02]",
+            s.successRate < 50 ? "bg-rose-50/30" : s.successRate < 80 ? "bg-amber-50/30" : "bg-emerald-50/30"
           )}>
-            <CardContent className="pt-4">
-              <div className="flex justify-between items-start mb-2">
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start mb-4">
                 <div className="space-y-1">
-                  <Badge variant="outline" className="text-[10px] uppercase">{s.subjectName}</Badge>
-                  <h4 className="font-bold leading-none">{s.topicName}</h4>
+                  <Badge variant="outline" className="bg-white/50 text-[10px] uppercase font-bold border-pink-200 text-pink-600">{s.subjectName}</Badge>
+                  <h4 className="font-bold text-lg leading-tight mt-1">{s.topicName}</h4>
                 </div>
-                <span className={cn(
-                  "text-lg font-black",
-                  s.successRate < 50 ? "text-destructive" : s.successRate < 80 ? "text-orange-500" : "text-green-500"
+                <div className={cn(
+                  "w-12 h-12 rounded-full flex items-center justify-center text-sm font-black border-2",
+                  s.successRate < 50 ? "text-rose-600 border-rose-200 bg-rose-100" : 
+                  s.successRate < 80 ? "text-amber-600 border-amber-200 bg-amber-100" : 
+                  "text-emerald-600 border-emerald-200 bg-emerald-100"
                 )}>
                   %{s.successRate}
-                </span>
+                </div>
               </div>
-              <div className="space-y-2 mt-4">
-                <Progress value={s.successRate} className="h-2" />
-                <div className="flex justify-between text-[11px] text-muted-foreground">
-                  <span>{s.correctCount} Doğru / {s.solvedCount} Soru</span>
-                  <span>{s.wrongCount} Yanlış</span>
+
+              <div className="space-y-3">
+                <Progress value={s.successRate} className="h-1.5 bg-white/50" />
+                
+                <div className="grid grid-cols-2 gap-y-3 gap-x-4 pt-4 border-t border-pink-100/50">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-6 bg-slate-300 rounded-full" />
+                    <div className="flex flex-col">
+                      <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-tighter">Soru</span>
+                      <span className="text-sm font-bold">{s.solvedCount}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-6 bg-emerald-400 rounded-full" />
+                    <div className="flex flex-col">
+                      <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-tighter">Doğru</span>
+                      <span className="text-sm font-bold text-emerald-600">{s.correctCount}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-6 bg-rose-400 rounded-full" />
+                    <div className="flex flex-col">
+                      <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-tighter">Yanlış</span>
+                      <span className="text-sm font-bold text-rose-600">{s.wrongCount}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-6 bg-amber-400 rounded-full" />
+                    <div className="flex flex-col">
+                      <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-tighter">Boş</span>
+                      <span className="text-sm font-bold text-amber-600">{s.emptyCount}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </CardContent>
