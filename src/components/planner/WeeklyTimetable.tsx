@@ -266,7 +266,9 @@ export function WeeklyTimetable() {
               <Label>Ders</Label>
               <Select value={selectedSubject} onValueChange={(val) => setSelectedSubject(val || "")}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Ders seçin" />
+                  <SelectValue placeholder="Ders seçin">
+                    {subjects.find(s => s.id === selectedSubject)?.name}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {subjects.map(s => (
@@ -281,7 +283,9 @@ export function WeeklyTimetable() {
                 <Label>Konu</Label>
                 <Select value={selectedTopic} onValueChange={(val) => setSelectedTopic(val || "")}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Konu seçin" />
+                    <SelectValue placeholder="Konu seçin">
+                      {selectedSubjectData?.topics?.find((t: any) => t.id === selectedTopic)?.name}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {selectedSubjectData?.topics?.length > 0 ? (

@@ -3,6 +3,7 @@
 import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/mode-toggle";
 
 import { useSession } from "next-auth/react";
 
@@ -17,6 +18,7 @@ export function Navbar() {
         <h1 className="text-xl font-semibold">Hoşgeldin, {userName.split(" ")[0]} 👋</h1>
       </div>
       <div className="flex items-center gap-4">
+        <ModeToggle />
         <Button variant="ghost" size="icon" className="relative text-muted-foreground">
           <Bell className="h-5 w-5" />
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary" />
